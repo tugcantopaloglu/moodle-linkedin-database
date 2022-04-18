@@ -66,3 +66,84 @@ Moodle-Linkedin database which has functionalities from both sites.
    Collection can be both job offer or post.   
 # **2. Design - Conceptual Design**   
 
+![Picture1](https://user-images.githubusercontent.com/53763911/163815953-31551b49-9dba-4115-a406-7274278b68d6.jpg)   
+
+# **3. Design - Logical Model**
+##   3.1 Mapping   
+**1.ITERATION**   
+1-)   
+TRANSCRIPT(transcript_no,type,taken_date,gpa)   
+COLLEGE(college_id,college_name,college_location,college_phone)   
+FACULTY(faculty_id,faculty_name,faculty_location,faculty_phone)      
+DEPARTMENT(department_id,department_phone,department_name,department_location)   
+COURSE(course_id,course_name,course_description)   
+COMPANY(company_id,mgr_id)   
+COMPANY_PROFILE(c_profile_id,company_name,comapny_loc,company_phone)   
+USER_PROFILE(user_profile_id,fname,minit,lname,mail,address,phone,sex,bdate)   
+2-)      
+3-) 1 to 1   
+COMPANY(company_id,mgr_id,c_profile_id)  C_HAS_PROFILE   
+4-)  1 TO N   
+FACULTY(faculty_id,faculty_name,faculty_location,faculty_phone,faculty_college_id) BELONGS   
+DEPARTMENT(department_id,department_phone,department_name,department_location,department_faculty_id) HAS   
+COURSE(course_id,course_name,course_description,course_department_id) GIVE   
+TRANSCRIPT(transcript_no,type,taken_date,gpa,t_college_id) TAKEN_BY   
+5-) M to N   
+VIEW_PROFILE(user_profile_id,user_viewer_id)   
+CONNECT(user_profile_id,user_connect_id)   
+6-)   
+7-)   
+8-)   
+8.D.)   
+DB_USER(user_id,username,psswrd,student_flag,teacher_flag,worker_flag,teacher_degree,sector)   
+8.A.)   
+ACHIEVEMENT(achievemet_id,date,achievement_type)   
+TEST_SCORE(achievemet_id,score,test_name)   
+WILLING_PROJECT(achievemet_id,project_name)   
+LANGUAGE(achievement_id,language_name)   
+CERTIFICATE(achievement_id,certificate_name)   
+8.A.)   
+GRADING_REQ(grading_req_id,grading_type)   
+QUIZ(grading_req_id,quiz_grade)   
+PROJECT(grading_req_id,project_grade)   
+EXAM(grading_req_id,exam_grade)   
+HOMEWORK(grading_req_id,homework_grade)   
+9-)   
+COLLECTION(collection_id)   
+POST(post_id,post_collection_id)   
+JOB_OFFER(job_offer_id,job_collection_id,job_title,job_location)   
+**2.ITERATION**   
+1-)      
+2-)   
+PRIVATE_FILE(file_id,private_user_id,file_name)  UPLOAD   
+3-) 1 to 1   
+DB_USER(user_id,username,psswrd,student_flag,teacher_flag,worker_flag,teacher_degree,sector,user_profile_id) HAS_PROFILE   
+4-) 1 to N   
+TRANSCRIPT(transcript_no,type,taken_date,gpa,t_college_id,t_user_id) HAS_TRANS   
+DB_USER(user_id,username,psswrd,student_flag,teacher_flag,worker_flag,teacher_degree,sector,user_profile_id,student_college_id)  STUDY   
+DB_USER(user_id,username,psswrd,student_flag,teacher_flag,worker_flag,teacher_degree,sector,user_profile_id,student_college_id,teacher_college_id) WORK    
+DB_USER(user_id,username,psswrd,student_flag,teacher_flag,worker_flag,teacher_degree,sector,user_profile_id,student_college_id,teacher_college_id,worker_company_id,career_title,start_date,finish_date) CAREER   
+JOB_OFFER(job_offer_id,job_collection_id,job_title,job_location,job_offer_company_id) OFFERS      
+COLLECTION(collection_id,collection_user_id) SAVE   
+GRADING_REQ(grading_req_id,grading_type,grading_req_course_id) HAS_CRITERIA   
+5-) N TO M   
+LIKE(post_id,user_id)   
+COMMENT(post_id,user_id)   
+SHARE(post_id,user_id)      
+ENROLL(user_id,course_id,grade)   
+TEACH(user_id,course_id,year,semester)   
+ACHIEVE(achievement_id,user_id)   
+APPLY(job_offer_id,user_id)   
+VIEW(job_offer_id,user_id)   
+6-)   
+7-)   
+8-)   
+9-)   
+
+##   3.2 Relational Model   
+![Picture2](https://user-images.githubusercontent.com/53763911/163816400-ff39f626-1109-477e-baff-688965a5e166.jpg)   
+
+## 4. Implementation - Physical Model
+   Physical model implemented with POSTGRE SQL and pgAdmin 4.   
+   All SQL codes can be found in Project folder. Tables can be found in “Tables.txt”. In order to maintain readibility all tuples are not included in tuples section and tuples can be found in “Tuples.txt”. Triggers can be found in “Triggers.txt”. Because of the disability of POSTGRE SQL instead of assertions we used check constraints and check constraints can be found in “CheckConstraints.txt”.Delete and Update insertions can be found in “DeleteUpdate.txt”. SQL statements can be found in “SelectStatements.txt”.   
+
