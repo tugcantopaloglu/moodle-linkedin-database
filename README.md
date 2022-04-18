@@ -1,5 +1,5 @@
 # Moodle-Linkedin Database 
-Moodle-Linkedin database which has functionalities from both sites.   
+Moodle-Linkedin database which has functionalities from both sites. Information given in readme and can be found in final report too.   
 # **1. Analysis**   
 ## **1.1 Brief Explanation**   
    If we look at these two programs independently for the first time, LinkedIn is a business networking application that connects registered individuals, corporations, and schools all around the world. Job advertising, employment applications, job contacts, and talents, work experiences, interests, and other fields relevant to each user are all included in the application, as are profiles in the form of a CV.
