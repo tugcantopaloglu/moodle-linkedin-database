@@ -1,0 +1,23 @@
+DELETE FROM Db_User
+WHERE username = 'worthbee';
+
+DELETE FROM Faculty
+WHERE faculty_college_id=2
+
+DELETE FROM Company_Profile
+WHERE company_location ='İZMİR'
+
+UPDATE Db_User
+SET sector='Marketing'
+WHERE user_id = 100003
+
+UPDATE Company_Profile
+SET company_location ='ANKARA'
+WHERE company_location='İSTANBUL'
+
+UPDATE Achievement
+SET achievement_date ='03-06-2022'
+WHERE achievement_id=110016
+
+
+

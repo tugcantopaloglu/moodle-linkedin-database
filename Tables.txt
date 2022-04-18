@@ -1,0 +1,275 @@
+CREATE TYPE name AS(
+Fname text,
+Minit text,
+Lname text
+);
+
+CREATE TYPE composite_time AS(
+start_date Date,
+finish_date Date
+);
+
+CREATE TABLE College(
+college_id serial Primary Key NOT NULL,
+college_name text unique NOT NULL,
+college_location text,
+college_phone integer unique
+);
+
+CREATE TABLE Company_Profile(
+company_profile_id serial Primary Key NOT NULL,
+company_name text UNIQUE NOT NULL,
+company_location text,
+company_phone integer UNIQUE
+);
+CREATE TABLE User_Profile(
+user_profile_id serial Primary Key NOT NULL,
+full_name name,
+mail text unique NOT NULL,
+address text,
+phone integer unique,
+sex character,
+BDate Date
+);
+CREATE TABLE Company(
+company_id serial Primary Key NOT NULL,
+company_profile_id integer unique NOT NULL,
+mgr_id integer unique NOT NULL,
+Foreign Key(company_profile_id) references Company_Profile(company_profile_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Db_User(
+user_id serial Primary Key NOT NULL,
+username text unique NOT NULL,
+psswrd integer NOT NULL,
+student_flag boolean,
+teacher_flag boolean,
+worker_flag boolean,
+sector text,
+teacher_degree text,
+student_college_id integer,
+teacher_college_id integer ,
+worker_company_id integer ,
+user_profile_id integer unique NOT NULL,
+career_title text,
+work_time composite_time, 
+Foreign Key(student_college_id) references College (college_id) ON DELETE CASCADE ON UPDATE CASCADE,
+Foreign Key(teacher_college_id) references College (college_id) ON DELETE CASCADE ON UPDATE CASCADE,
+Foreign Key(worker_company_id) references Company (company_id) ON DELETE CASCADE ON UPDATE CASCADE,
+Foreign Key(user_profile_id) references User_Profile (user_profile_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Transcript(
+transcript_no serial Primary Key NOT NULL,
+Type text NOT NULL,
+taken_date Date,
+gpa numeric NOT NULL,
+t_user_id integer NOT NULL,
+t_college_id integer NOT NULL,
+Foreign Key(t_user_id) references Db_User(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+Foreign Key(t_college_id) references College(college_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Faculty (
+faculty_id serial Primary Key NOT NULL,
+faculty_name text NOT NULL,
+faculty_location text,
+faculty_phone integer unique,
+faculty_college_id integer NOT NULL,
+Foreign Key(faculty_college_id) references College(college_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Department (
+department_id serial Primary Key NOT NULL,
+department_faculty_id integer NOT NULL,
+department_phone integer unique,
+department_name text NOT NULL,
+department_location text,
+Foreign Key(department_faculty_id) references Faculty(faculty_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Course(
+course_id serial Primary Key NOT NULL,
+course_department_id integer NOT NULL,
+course_name text NOT NULL,
+course_description text,
+Foreign Key(course_department_id) references Department(department_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Grading_Req (
+grading_req_id serial Primary Key NOT NULL,
+grading_req_course_id integer NOT NULL,
+grading_type text NOT NULL,
+Foreign Key(grading_req_course_id) references Course(course_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Quiz(
+grading_req_id serial Primary Key NOT NULL,
+quiz_grade integer NOT NULL,
+Foreign Key(grading_req_id) references Grading_Req(grading_req_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Project(
+grading_req_id serial Primary Key NOT NULL,
+project_grade integer NOT NULL,
+Foreign Key(grading_req_id) references Grading_Req(grading_req_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Exam(
+grading_req_id serial Primary Key NOT NULL,
+exam_grade integer NOT NULL,
+Foreign Key(grading_req_id) references Grading_Req(grading_req_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Homework(
+grading_req_id serial Primary Key NOT NULL,
+homework_grade integer NOT NULL,
+Foreign Key(grading_req_id) references Grading_Req(grading_req_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Private_File (
+private_user_id integer NOT NULL,
+file_id integer unique NOT NULL,
+file_name text NOT NULL,
+Primary Key(private_user_id, file_id),
+Foreign Key(private_user_id) references Db_User(user_id) ON DELETE CASCADE ON UPDATE CASCADE 
+);
+
+CREATE TABLE Achievement (
+achievement_id serial Primary Key NOT NULL,
+achievement_type text NOT NULL,
+achievement_date Date
+);
+
+CREATE TABLE Willing_Project (
+achievement_id serial Primary Key NOT NULL,
+project_name text NOT NULL,
+Foreign Key(achievement_id) references Achievement(achievement_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Language (
+achievement_id serial Primary Key NOT NULL,
+language_name text NOT NULL,
+Foreign Key(achievement_id) references Achievement(achievement_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Certificate (
+achievement_id serial Primary Key NOT NULL,
+certificate_name text NOT NULL,
+Foreign Key(achievement_id) references Achievement(achievement_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Test_Score (
+achievement_id serial Primary Key NOT NULL,
+test_name text NOT NULL,
+score integer NOT NULL,
+Foreign Key(achievement_id) references Achievement(achievement_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Collection (
+collection_user_id integer NOT NULL,
+collection_id  serial Primary Key NOT NULL,
+Foreign Key(collection_user_id) references Db_User(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Job_Offer (
+job_offer_id serial Primary Key NOT NULL,
+job_offer_company_id integer NOT NULL,
+job_collection_id integer NOT NULL,
+job_title text NOT NULL,
+job_location text,
+Foreign Key(job_collection_id) references Collection(collection_id) ON DELETE CASCADE ON UPDATE CASCADE,
+Foreign Key(job_offer_company_id) references Company(company_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Post (
+post_id serial Primary Key NOT NULL,
+post_collection_id integer NOT NULL,
+Foreign Key(post_collection_id) references Collection(collection_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE View_Profile(
+user_profile_id integer NOT NULL,
+viewer_id integer NOT NULL,
+Primary key (user_profile_id, viewer_id),
+FOREIGN KEY(user_profile_id) REFERENCES User_Profile (user_profile_id) ON DELETE CASCADE ON UPDATE CASCADE,
+FOREIGN KEY(viewer_id) REFERENCES User_Profile (user_profile_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE Connect(
+user_profile_id integer NOT NULL,
+user_connect_id integer NOT NULL,
+Primary key (user_profile_id, user_connect_id),
+FOREIGN KEY(user_profile_id) REFERENCES User_Profile (user_profile_id) ON DELETE CASCADE ON UPDATE CASCADE,
+FOREIGN KEY(user_connect_id) REFERENCES User_Profile (user_profile_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE Enroll(
+user_id integer NOT NULL,
+course_id integer NOT NULL,
+grade integer NOT NULL,
+Primary Key(user_id, course_id),
+FOREIGN KEY(user_id) REFERENCES Db_User (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+FOREIGN KEY(course_id) REFERENCES Course (course_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Teach(
+user_id integer NOT NULL,
+course_id integer NOT NULL,
+year integer,
+semester text,
+Primary Key(user_id, course_id),
+FOREIGN KEY(user_id) REFERENCES Db_User (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+FOREIGN KEY(course_id) REFERENCES Course (course_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Achieve(
+user_id integer NOT NULL,
+achievement_id integer NOT NULL,
+Primary Key(user_id, achievement_id),
+FOREIGN KEY(user_id) REFERENCES Db_User (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+FOREIGN KEY(achievement_id) REFERENCES Achievement (achievement_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Apply(
+user_id integer NOT NULL,
+job_offer_id integer NOT NULL,
+Primary Key (user_id, job_offer_id),
+Foreign Key(user_id) references Db_User(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+Foreign Key(job_offer_id) references Job_Offer(job_offer_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE View(
+user_id integer NOT NULL,
+job_offer_id integer NOT NULL,
+Primary Key(user_id, job_offer_id),
+Foreign Key(user_id) references Db_User(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+Foreign Key(job_offer_id) references Job_Offer(job_offer_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Post_Share(
+post_id integer NOT NULL,
+user_id integer NOT NULL,
+Primary Key(post_id, user_id),
+Foreign Key(post_id) references Post(post_id) ON DELETE CASCADE ON UPDATE CASCADE,
+Foreign Key(user_id) references Db_User(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Post_Like(
+post_id integer NOT NULL,
+user_id integer NOT NULL,
+Primary Key (post_id, user_id),
+Foreign Key(post_id) references Post(post_id) ON DELETE CASCADE ON UPDATE CASCADE,
+Foreign Key(user_id) references Db_User(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Post_Comment(
+post_id integer NOT NULL,
+user_id integer NOT NULL,
+Primary Key (post_id, user_id),
+Foreign Key(post_id) references Post(post_id) ON DELETE CASCADE ON UPDATE CASCADE,
+Foreign Key(user_id) references Db_User(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+);

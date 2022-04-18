@@ -1,0 +1,131 @@
+Retrieve the transcript information of user with ID of 100000.
+
+select transcript_no, Transcript.Type, gpa, taken_date, college_name
+from Db_User, College, Transcript
+where Db_user.user_id =100000 and t_user_id=user_id and t_college_id=college_id
+
+
+Retrieve the grading requirements of the courses which in the department with ID of 500001
+
+select course_name, grading_type
+from Course, Grading_Req, Department
+where department_id=500001 and course_department_id=department_id  and course_id=grading_req_course_id
+
+
+
+CRITIC SQLs	
+
+Retrieve the name of company which located in İzmir or offers a job in İzmir.
+
+select distinct company_name
+from Company_Profile
+where company_name in (
+			select company_name
+			from Company_Profile
+			where company_location='İZMİR')
+			or
+			company_name in (select company_name
+					from Company_Profile, Job_Offer, Company
+					where job_location='İzmir' and job_offer_company_id=company_id
+					and Company.company_profile_id=Company_Profile.company_profile_id)
+
+If the user having 900000 user ids has a connection in the company which has offer a job that the user applied for, it returns that
+contact's user id.
+
+select user_id
+from Db_User
+where (worker_company_id) in (select company_id
+			  from Apply, Db_User, Job_Offer, User_Profile, Company_Profile,Company
+			  where User_Profile.user_profile_id=900000 and Db_User.user_id=Apply.user_id
+			  and Apply.job_offer_id=Job_Offer.job_offer_id and Job_Offer.job_offer_company_id=Company.company_id)
+							 
+intersect
+select user_id
+from Db_User
+where (user_profile_id) in (select user_connect_id
+		        from Connect, Db_User, User_Profile
+		        where User_Profile.user_profile_id=900000 and User_Profile.user_profile_id=Connect.user_profile_id)
+
+
+
+Returns the information of the teacher who teaches the courses in which the student with a user ID of 100000 is registered.
+
+create view teacher(teacher_id, course_name, year, semester) as
+(select distinct Teach.user_id, course_name, Teach.year, semester
+from Enroll, Teach, Db_User, Course, User_Profile
+where Db_User.user_id=100000 and Db_User.user_id=Enroll.user_id and Enroll.course_id=Course.course_id
+and Course.course_id=Teach.course_id)
+
+select full_name, teacher.course_name, teacher.year, teacher.semester
+from teacher, Db_User, User_Profile
+where teacher.teacher_id=Db_User.user_id and Db_User.user_profile_id=User_Profile.user_profile_id
+
+Retrieve the information of courses which has college_id of 300000
+
+select college_name, faculty_name, department_name, course_name
+from College, Faculty, Department, Course
+where College.college_id=300000 AND College.college_id = Faculty.faculty_college_id AND Faculty.faculty_id=Department.department_faculty_id
+AND Department.department_id=Course.course_department_id
+
+
+Retrive the course names and faculty names which contains "Engineering" in all colleges.
+
+SELECT course_name,college_name,faculty_name,department_name
+FROM College, Faculty, Department, Course
+WHERE department_name LIKE '%Engineering' AND Department.department_faculty_id=Faculty.faculty_id 
+AND Faculty.faculty_college_id= College.college_id AND Department.department_id=Course.course_department_id
+
+
+
+Retrieve the worker's informations who works at the company with id of 800000.
+
+SELECT full_name,company_name,mail,address,phone,sex,BDate, career_title,work_time
+FROM Db_User,User_Profile,Company,Company_Profile
+WHERE company_id=800000 AND Db_User.worker_company_id=company_id AND Db_User.user_profile_id= User_Profile.user_profile_id
+AND Company.company_profile_id=Company_Profile.company_profile_id
+
+Retrieve the job offer information which offers by Arçelik.
+
+SELECT job_title,job_offer_id,job_location,company_name
+FROM Job_Offer, Company_Profile,Company
+WHERE Company.company_id=800000 AND Company.company_profile_id=Company_Profile.company_profile_id 
+AND Company.company_id=Job_Offer.job_offer_company_id
+
+Retrieve the career title and company names of user who is worker .
+
+SELECT full_name,company_name,career_title
+FROM Db_User, Company, Company_Profile, User_Profile
+WHERE worker_flag=true AND Db_User.user_profile_id=User_Profile.user_profile_id AND worker_company_id=company_id
+AND Company.company_profile_id=Company_Profile.company_profile_id
+
+Retrieve the users transcript information who has gpa more than 3.
+
+SELECT user_id,transcript_no,type,gpa,taken_date,college_name
+FROM Db_User,Transcript,College
+WHERE gpa>3 AND t_user_id=user_id AND t_college_id=college_id
+
+Retrieve the user id and the user name of users who is either both student or teacher or both student or worker.
+
+SELECT user_id,username
+FROM Db_User
+WHERE student_flag=true AND teacher_flag=true
+
+UNION
+
+SELECT user_id,username
+FROM Db_User
+WHERE student_flag=true AND worker_flag=true
+	   
+
+Retrieve the full name, address, sex , birth date and phone of all users.
+
+SELECT full_name,address,sex,BDate,phone
+FROM User_Profile
+
+Retrieve the year,semester of teacher with ID of 100008.
+
+SELECT user_id,Teach.year,semester
+FROM Teach
+WHERE user_id=100008
+
+

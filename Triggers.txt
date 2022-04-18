@@ -1,0 +1,55 @@
+CREATE FUNCTION gpa_controller()
+RETURNS TRIGGER AS $gpa_controller$
+    BEGIN
+        --check that new gpa is  above 1,80
+         IF NEW.gpa < 1.80 THEN
+            RAISE EXCEPTION 'Transcript GPA can not be below 1,80.';
+         END IF;   
+    END;
+$gpa_controller$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trigger_gpa 
+BEFORE INSERT OR UPDATE OF gpa ON TRANSCRIPT
+FOR EACH ROW
+EXECUTE FUNCTION gpa_controller();
+
+-------------------------------------------
+CREATE FUNCTION college_name()
+RETURNS TRIGGER AS $college_name$
+    BEGIN
+        --check that college_name is given
+        IF NEW.college_name IS NULL THEN
+            RAISE EXCEPTION 'College Name cannot be null';
+        END IF;  
+    END;
+$college_name$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trigger_college_name
+BEFORE INSERT OR UPDATE OF college_name ON COLLEGE
+FOR EACH ROW
+EXECUTE FUNCTION college_name();
+
+--------------------------------------------
+
+CREATE FUNCTION psswrd_change()
+RETURNS TRIGGER AS $psswrd_change$
+    BEGIN
+        --check that password has changed
+        IF NEW.psswrd <> OLD.psswrd THEN
+            RAISE EXCEPTION 'Password changed.';
+        END IF;  
+        --check that new password is the same as the old one
+        IF NEW.psswrd = OLD.psswrd THEN
+            RAISE EXCEPTION 'New password can not be the same as the old one.';
+        END IF;  
+        
+    END;
+$psswrd_change$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trigger_psswrd
+BEFORE UPDATE OF psswrd ON DB_USER
+FOR EACH ROW
+EXECUTE FUNCTION psswrd_change();

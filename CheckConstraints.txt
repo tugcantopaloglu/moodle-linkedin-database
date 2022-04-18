@@ -1,0 +1,72 @@
+ALTER TABLE Db_User
+ADD CONSTRAINT Db_User_CheckFinishDateGreaterThanStartDate
+CHECK ((work_time).finish_date >= (work_time).start_date) ;
+
+ALTER TABLE Quiz
+ADD CONSTRAINT GRADE_CHECK
+CHECK (quiz_grade>=40);
+
+ALTER TABLE Project
+ADD CONSTRAINT GRADE_CHECK
+CHECK (project_grade>=40);
+
+ALTER TABLE Exam
+ADD CONSTRAINT GRADE_CHECK
+CHECK (exam_grade>=40);
+
+ALTER TABLE Homework
+ADD CONSTRAINT GRADE_CHECK
+CHECK (homework_grade>=40);
+
+ALTER TABLE Achievement 
+ADD CONSTRAINT TYPE_CHECK_ACHIEVEMENT
+CHECK (achievement_type IN ('Willing Project','Language','Test_Score','Certificate'));
+
+ALTER TABLE Grading_Req 
+ADD CONSTRAINT TYPE_CHECK_REQ
+CHECK (grading_type IN ('Quiz','Project','Exam','Homework'));
+
+ALTER TABLE User_Profile
+ADD CONSTRAINT CHECK_SEX
+CHECK (Sex IN ('M','F'));
+
+ALTER TABLE Db_User
+ADD CONSTRAINT CHECK_LENGTH
+CHECK (user_id Between 100000 and 199999);
+
+ALTER TABLE Transcript
+ADD CONSTRAINT CHECK_LENGTH
+CHECK (transcript_no Between 200000 and 299999);
+
+ALTER TABLE College
+ADD CONSTRAINT CHECK_LENGTH
+CHECK (college_id Between 300000 and 399999);
+
+ALTER TABLE Faculty
+ADD CONSTRAINT CHECK_LENGTH
+CHECK (faculty_id Between 400000 and 499999);
+
+ALTER TABLE Department
+ADD CONSTRAINT CHECK_LENGTH
+CHECK (department_id Between 500000 and 599999);
+
+ALTER TABLE Course
+ADD CONSTRAINT CHECK_LENGTH
+CHECK (course_id Between 600000 and 699999);
+
+ALTER TABLE Grading_Req
+ADD CONSTRAINT CHECK_LENGTH
+CHECK (grading_req_id Between 700000 and 799999);
+
+ALTER TABLE Company
+ADD CONSTRAINT CHECK_LENGTH
+CHECK (company_id Between 800000 and 899999);
+
+ALTER TABLE User_Profile
+ADD CONSTRAINT CHECK_LENGTH
+CHECK (user_profile_id Between 900000 and 999999);
+
+
+
+
+
